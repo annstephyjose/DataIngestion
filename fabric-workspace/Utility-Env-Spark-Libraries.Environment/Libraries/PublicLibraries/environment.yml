@@ -1,0 +1,5 @@
+dependencies:
+  - pip:
+      - dlt==1.2.0
+      - pycryptodome==3.21.0
+      - simple_salesforce==1.12.6

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "NB_Table_Maintenance_All",
+    "description": "This notebook performs OPTIMIZE and VACUUM maintenance tasks for all Delta tables in the lakehouse(s)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c5a33db8-d1dd-41c2-9144-b94cbe48c446"
+  }
+}
