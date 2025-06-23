@@ -251,7 +251,7 @@ if varPrivateKey is not None:
 # CELL ********************
 
 def write_To_Files(df, filename):
-    full_path = lakehouse_files_path +'/Landing/' + varSourceType + '/' + varTableName + '/' + filename
+    full_path = lakehouse_files_path +'/Landing/' + varSourceType + '/'+ varTableName + '/' + filename
     df.write.mode("append").parquet(full_path)
 
     # deltaTable = DeltaTable.forPath(spark,full_path)
