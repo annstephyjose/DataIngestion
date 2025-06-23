@@ -11,14 +11,56 @@
 # META       "default_lakehouse_name": "",
 # META       "default_lakehouse_workspace_id": ""
 # META     },
-# META     "environment": {}
+# META     "environment": {
+# META       "environmentId": "b64c69e1-6069-b069-4b38-f5bf4b6db508",
+# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
+# META     }
 # META   }
+# META }
+
+# MARKDOWN ********************
+
+# # 📃 Parameters
+
+# PARAMETERS CELL ********************
+
+varSourceSystemCode = ""
+varDeltaType = ""
+varRawLakehouse = ""
+varDeltaLoadColumnName = ""
+varDeltaKeyColumn = ""
+varTableName = ""
+varFileName = ""
+varSourceProcessType = ""
+varFolderDate = ""
+varBronzeTableName = ""
+
+Log_Operations = ""
+Schema_Evolution = False
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
 # META }
 
 # MARKDOWN ********************
 
 # # 📌 Attach Default Lakehouse
 # ❗**Note the code in the cell that follows is required to programatically attach the lakehouse and enable the running of spark.sql(). If this cell fails simply restart your session as this cell MUST be the first command executed on session start.**
+
+# CELL ********************
+
+if varFolderDate == None:
+    varFolderDate = datetime.now(sydney_tz).strftime('/%Y/%m/%d/%H/%M/')
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # CELL ********************
 
@@ -77,32 +119,6 @@ spark.conf.set("spark.databricks.notebookExecutionTimeout", "1800s")
 # META   "language_group": "synapse_pyspark"
 # META }
 
-# MARKDOWN ********************
-
-# # 📃 Parameters
-
-# PARAMETERS CELL ********************
-
-varSourceType = ""
-varDeltaType = ""
-varRawLakehouse = ""
-varDeltaLoadColumnName = ""
-varDeltaKeyColumn = ""
-varTableName = ""
-varFileName = ""
-varSourceProcessType = ""
-varFolderDate = ""
-
-Log_Operations = ""
-Schema_Evolution = False
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # CELL ********************
 
 from notebookutils import mssparkutils
@@ -130,7 +146,7 @@ from pyspark.sql import functions as f
 
 # CELL ********************
 
-rawprocess_Log_ID = Notebook_log_Initialise(varLogLakehouse, varSourceType, varRawNotebookTableName, varRawParentLogID, varRawNotebookLogID, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"))
+rawprocess_Log_ID = Notebook_log_Initialise(varLogLakehouse, varSourceSystemCode, varRawNotebookTableName, varParentLogID, varRawNotebookLogID, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"))
 
 
 
@@ -244,9 +260,9 @@ error_description_n = ""
 # CELL ********************
 
 # Set Folder Variables
-Landing_Folder_Name = 'Landing/' + varSourceType + '/' + varTableName + '/' + varFileName
-Staging_Folder_Name = 'Staging/'+ varSourceType + '/' + varTableName + varFolderDate + 'Decompressed'
-Archive_Folder_Name = 'Archive/'+ varSourceType + '/' + varTableName + '/' + varFolderDate
+Landing_Folder_Name = 'Landing/' + varSourceSystemCode + '/' + varTableName 
+Staging_Folder_Name = 'Staging/'+ varSourceSystemCode + '/' + varTableName + varFolderDate + 'Decompressed' 
+Archive_Folder_Name = 'Archive/'+ varSourceSystemCode + '/' + varTableName + '/' + varFolderDate 
 
 # METADATA ********************
 
@@ -258,19 +274,6 @@ Archive_Folder_Name = 'Archive/'+ varSourceType + '/' + varTableName + '/' + var
 # CELL ********************
 
 error_description = ""
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-# Start staging process
-#StagingFolderCopyOutput = Copy_Files_To(Landing_Folder_Name, Staging_Folder_Name)
-
 
 # METADATA ********************
 
@@ -391,7 +394,7 @@ def process_file(itemName, source_object_name):
         
         #target_file_name = archive_path + "/" + itemName
         #fmove_result = move_To_Folder(source_object_name, target_file_name)
-        set_Source_Last_Run(varSourceType, varTableName)
+        set_Source_Last_Run(varSourceSystemCode, varTableName)
     #except Exception as e:
     #    error_description += f"{e}"
     #    error_description_n = f"{e}"
@@ -481,6 +484,10 @@ if fileprocessoutput is not None:
 if not error_description == "":
     load_status = "Failed"
     rawprocess_error_description = error_description
+    Notebook_log_Update_output = Notebook_log_Update(varLogLakehouse, varSourceSystemCode, varRawNotebookTableName, varRawNotebookLogID, "Exception Error", "RAW Process Notebook Run Failed for " + varTableName, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"), rawprocess_error_description)
+    raise
+    mssparkutils.notebook.exit(Notebook_log_Update_output)
+
 else:
     if "Error accessing " not in error_description or "There are no files" not in error_description:
         remove_files_from_folder(Staging_Folder_Name)
@@ -516,7 +523,7 @@ Notebook_Detail_log_Update(varLogLakehouse, varRawNotebookName, varRawNotebookLo
 
 #Log Completion
 
-rawprocess_Notebook_Completion = Notebook_log_Update(varLogLakehouse, varSourceType, varRawNotebookTableName, varRawNotebookLogID, load_status, "RAW Process Notebook Run Completed for " + varTableName, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"), rawprocess_error_description)
+rawprocess_Notebook_Completion = Notebook_log_Update(varLogLakehouse, varSourceSystemCode, varRawNotebookTableName, varRawNotebookLogID, load_status, "RAW Process Notebook Run Completed for " + varTableName, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"), rawprocess_error_description)
 
 # METADATA ********************
 

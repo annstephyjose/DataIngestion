@@ -315,7 +315,7 @@
                     "typeProperties": {
                       "location": {
                         "type": "LakehouseLocation",
-                        "fileName": "SourceMetaTable.csv"
+                        "fileName": "meta_SourceObject.csv"
                       },
                       "columnDelimiter": ",",
                       "quoteChar": "\"",
@@ -340,11 +340,16 @@
                 },
                 "sink": {
                   "type": "LakehouseTableSink",
-                  "tableActionOption": "OverWrite",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "PartitionByKey",
+                  "partitionNameList": [
+                    "SourceSystemCode",
+                    "TargetTableName"
+                  ],
                   "datasetSettings": {
                     "type": "LakehouseTable",
                     "typeProperties": {
-                      "table": "meta_source_table"
+                      "table": "meta_SourceObject"
                     },
                     "schema": [],
                     "linkedService": {
@@ -367,12 +372,12 @@
                   "mappings": [
                     {
                       "source": {
-                        "name": "SourceType",
+                        "name": "SourceSystemCode",
                         "type": "String",
                         "physicalType": "String"
                       },
                       "sink": {
-                        "name": "SourceType",
+                        "name": "SourceSystemCode",
                         "physicalType": "string"
                       }
                     },
@@ -417,9 +422,7 @@
                       },
                       "sink": {
                         "name": "LoadFrequency",
-                        "physicalType": "decimal",
-                        "scale": 18,
-                        "precision": 38
+                        "physicalType": "string"
                       }
                     },
                     {
@@ -430,39 +433,6 @@
                       },
                       "sink": {
                         "name": "DeltaKeyColumns",
-                        "physicalType": "string"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "RawLakehouse",
-                        "type": "String",
-                        "physicalType": "String"
-                      },
-                      "sink": {
-                        "name": "RawLakehouse",
-                        "physicalType": "string"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "VaultPrivateKeyName",
-                        "type": "String",
-                        "physicalType": "String"
-                      },
-                      "sink": {
-                        "name": "VaultPrivateKeyName",
-                        "physicalType": "string"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "AuthUserName",
-                        "type": "String",
-                        "physicalType": "String"
-                      },
-                      "sink": {
-                        "name": "AuthUserName",
                         "physicalType": "string"
                       }
                     },
@@ -523,6 +493,17 @@
                     },
                     {
                       "source": {
+                        "name": "SourceSchemaName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SourceSchemaName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
                         "name": "TargetTableName",
                         "type": "String",
                         "physicalType": "String"
@@ -573,6 +554,72 @@
                       },
                       "sink": {
                         "name": "LastRunTimeStamp",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "SecondsToWait",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SecondsToWait",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "MaxAttempts",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "MaxAttempts",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "cancelPipeline",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "cancelPipeline",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "IsCDCEnabled",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "IsCDCEnabled",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "DeltaHighWaterMark",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "DeltaHighWaterMark",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "IsEnabled",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "IsEnabled",
                         "physicalType": "string"
                       }
                     }
@@ -592,7 +639,361 @@
                 "secureInput": false,
                 "secureOutput": false
               },
-              "name": "Copy_Meta_Source_Table",
+              "name": "Copy_meta_SourceObject",
+              "dependsOn": []
+            },
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "DelimitedTextSource",
+                  "formatSettings": {
+                    "type": "DelimitedTextReadSettings",
+                    "skipLineCount": 0
+                  },
+                  "storeSettings": {
+                    "type": "LakehouseReadSettings",
+                    "recursive": true,
+                    "enablePartitionDiscovery": false
+                  },
+                  "datasetSettings": {
+                    "type": "DelimitedText",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "fileName": "meta_SourceSystem.csv"
+                      },
+                      "columnDelimiter": ",",
+                      "quoteChar": "\"",
+                      "escapeChar": "\\",
+                      "firstRowAsHeader": true
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "LH_Bronze",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "4603a0d6-45a4-464e-b675-a4b7336d7a37",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": "meta_SourceSystem"
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "LH_Bronze",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "4603a0d6-45a4-464e-b675-a4b7336d7a37",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "mappings": [
+                    {
+                      "source": {
+                        "name": "SourceSystemCode",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SourceSystemCode",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "SourceType",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SourceType",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "RawLakehouseName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "RawLakehouseName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "VaultPrivateKey",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "VaultPrivateKey",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "AuthUserName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "AuthUserName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "SourceConnectionID",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SourceConnectionID",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "SourceDatabaseName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "SourceDatabaseName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "TargetConnectionID",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "TargetConnectionID",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "IngestionPipelineName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "IngestionPipelineName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "RawToBronzePipelineName",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "RawToBronzePipelineName",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "LandingContainer",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "LandingContainer",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "StagingContainer",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "StagingContainer",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "ArchiveContainer",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "ArchiveContainer",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "QuarantineContainer",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "QuarantineContainer",
+                        "physicalType": "string"
+                      }
+                    }
+                  ],
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy_meta_SourceSystem",
+              "dependsOn": []
+            },
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "DelimitedTextSource",
+                  "formatSettings": {
+                    "type": "DelimitedTextReadSettings",
+                    "skipLineCount": 0
+                  },
+                  "storeSettings": {
+                    "type": "LakehouseReadSettings",
+                    "recursive": true,
+                    "enablePartitionDiscovery": false
+                  },
+                  "datasetSettings": {
+                    "type": "DelimitedText",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "fileName": "meta_EnvironmentConfig.csv"
+                      },
+                      "columnDelimiter": ",",
+                      "quoteChar": "\"",
+                      "escapeChar": "\\",
+                      "firstRowAsHeader": true
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "LH_Bronze",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "4603a0d6-45a4-464e-b675-a4b7336d7a37",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": "meta_EnvironmentConfig"
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "LH_Bronze",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "4603a0d6-45a4-464e-b675-a4b7336d7a37",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "mappings": [
+                    {
+                      "source": {
+                        "name": "GlobalProperty",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "GlobalProperty",
+                        "physicalType": "string"
+                      }
+                    },
+                    {
+                      "source": {
+                        "name": "GlobalValue",
+                        "type": "String",
+                        "physicalType": "String"
+                      },
+                      "sink": {
+                        "name": "GlobalValue",
+                        "physicalType": "string"
+                      }
+                    }
+                  ],
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy_meta_EnvironmentConfig",
               "dependsOn": []
             }
           ],
@@ -1033,6 +1434,8 @@
           }
         },
         "name": "Office 365 Outlook1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "NB_ingestion_master",

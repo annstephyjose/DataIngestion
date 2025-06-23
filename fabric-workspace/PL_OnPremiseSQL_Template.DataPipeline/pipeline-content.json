@@ -1,0 +1,273 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Copy Source to Target",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SqlServerSource",
+            "sqlReaderQuery": {
+              "value": "@pipeline().parameters.SourceQuery",
+              "type": "Expression"
+            },
+            "queryTimeout": "02:00:00",
+            "isolationLevel": "Serializable",
+            "partitionOption": "None",
+            "datasetSettings": {
+              "annotations": [],
+              "type": "SqlServerTable",
+              "schema": [],
+              "typeProperties": {
+                "schema": {
+                  "value": "@pipeline().parameters.SourceSchemaName",
+                  "type": "Expression"
+                },
+                "table": {
+                  "value": "@pipeline().parameters.SourceTableName",
+                  "type": "Expression"
+                },
+                "database": {
+                  "value": "@pipeline().parameters.SourceDatabaseName",
+                  "type": "Expression"
+                }
+              },
+              "externalReferences": {
+                "connection": "@pipeline().parameters.SourceConnectionID"
+              }
+            }
+          },
+          "sink": {
+            "type": "DelimitedTextSink",
+            "storeSettings": {
+              "type": "LakehouseWriteSettings",
+              "copyBehavior": "FlattenHierarchy"
+            },
+            "formatSettings": {
+              "type": "DelimitedTextWriteSettings",
+              "fileExtension": ".txt",
+              "quoteAllText": true
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "dec50f23_b59d_4c28_ab7a_074f1b928410",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "@pipeline().parameters.WorkspaceID",
+                    "artifactId": "@pipeline().parameters.DestinationConnectionID",
+                    "rootFolder": "Files"
+                  }
+                }
+              },
+              "type": "DelimitedText",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "fileName": {
+                    "value": "@concat(pipeline().parameters.SourceTableName,'.txt')",
+                    "type": "Expression"
+                  },
+                  "folderPath": {
+                    "value": "@concat(pipeline().parameters.LandingContainer,'_txt/',pipeline().parameters.SourceSystemCode,'/',pipeline().parameters.DestinationTableName)",
+                    "type": "Expression"
+                  }
+                },
+                "columnDelimiter": ",",
+                "compressionCodec": "gzip",
+                "compressionLevel": "Optimal",
+                "escapeChar": "\\",
+                "firstRowAsHeader": true,
+                "quoteChar": "\""
+              },
+              "schema": []
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Copy txt to parquet",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "Copy Source to Target",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "LakehouseReadSettings",
+              "recursive": true,
+              "enablePartitionDiscovery": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "33b8f821_d598_4d65_bddf_5e3d24939a00",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "@pipeline().parameters.WorkspaceID",
+                    "artifactId": "@pipeline().parameters.DestinationConnectionID",
+                    "rootFolder": "Files"
+                  }
+                }
+              },
+              "type": "DelimitedText",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "fileName": {
+                    "value": "@concat(pipeline().parameters.SourceTableName,'.txt')",
+                    "type": "Expression"
+                  },
+                  "folderPath": {
+                    "value": "@concat(pipeline().parameters.LandingContainer,'_txt/',pipeline().parameters.SourceSystemCode,'/',pipeline().parameters.DestinationTableName)",
+                    "type": "Expression"
+                  }
+                },
+                "columnDelimiter": ",",
+                "compressionCodec": "gzip",
+                "compressionLevel": "Optimal",
+                "escapeChar": "\\",
+                "firstRowAsHeader": true,
+                "quoteChar": "\""
+              },
+              "schema": []
+            }
+          },
+          "sink": {
+            "type": "ParquetSink",
+            "storeSettings": {
+              "type": "LakehouseWriteSettings"
+            },
+            "formatSettings": {
+              "type": "ParquetWriteSettings",
+              "enableVertiParquet": true
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "f5342f3d_18a9_478c_809b_a481a51b7a97",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "@pipeline().parameters.WorkspaceID",
+                    "artifactId": "@pipeline().parameters.DestinationConnectionID",
+                    "rootFolder": "Files"
+                  }
+                }
+              },
+              "type": "Parquet",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "fileName": {
+                    "value": "@pipeline().parameters.FileName",
+                    "type": "Expression"
+                  },
+                  "folderPath": {
+                    "value": "@concat(pipeline().parameters.LandingContainer,'/',pipeline().parameters.SourceSystemCode,'/',pipeline().parameters.DestinationTableName)",
+                    "type": "Expression"
+                  }
+                },
+                "compressionCodec": "snappy"
+              },
+              "schema": []
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "SourceConnectionID": {
+        "type": "string",
+        "defaultValue": "{{varSourceConnectionID}}"
+      },
+      "SourceTableName": {
+        "type": "string",
+        "defaultValue": "{{varSourceTableName}}"
+      },
+      "DestinationConnectionID": {
+        "type": "string",
+        "defaultValue": "{{varDestinationConnectionID}}"
+      },
+      "DestinationTableName": {
+        "type": "string",
+        "defaultValue": "{{varDestinationTableName}}"
+      },
+      "SourceSchemaName": {
+        "type": "string",
+        "defaultValue": "{{varSourceSchemaName}}"
+      },
+      "SourceDatabaseName": {
+        "type": "string",
+        "defaultValue": "{{varSourceDatabaseName}}"
+      },
+      "SourceSystemCode": {
+        "type": "string",
+        "defaultValue": "{{varSourceSystemCode}}"
+      },
+      "LandingContainer": {
+        "type": "string",
+        "defaultValue": "{{varLandingContainer}}"
+      },
+      "FileName": {
+        "type": "string",
+        "defaultValue": "{{varFileName}}"
+      },
+      "SourceQuery": {
+        "type": "string",
+        "defaultValue": "{{varSourceQuery}}"
+      },
+      "WorkspaceID": {
+        "type": "string",
+        "defaultValue": "{{varWorkspaceID}}"
+      }
+    }
+  }
+}

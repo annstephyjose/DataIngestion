@@ -1,12 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Notebook",
-    "displayName": "NB_Raw_Functions",
-    "description": "New notebook"
+    "type": "DataPipeline",
+    "displayName": "PL_RawToBronze_Template"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "61ce9426-0909-980d-45ee-ef83d7d250f3"
+    "logicalId": "9b1d0ac7-b2ab-9c1e-46f9-b0cce2f0b63c"
   }
 }

@@ -1,0 +1,150 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "Copy Source to Target",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource",
+            "storeSettings": {
+              "type": "SftpReadSettings",
+              "recursive": true,
+              "wildcardFileName": {
+                "value": "@concat(pipeline().parameters.SourceTableName,'*.txt')",
+                "type": "Expression"
+              },
+              "enablePartitionDiscovery": false,
+              "disableChunking": false
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "type": "DelimitedText",
+              "typeProperties": {
+                "location": {
+                  "type": "SftpLocation"
+                },
+                "columnDelimiter": "|",
+                "escapeChar": "\\",
+                "firstRowAsHeader": true,
+                "quoteChar": "\""
+              },
+              "schema": [],
+              "externalReferences": {
+                "connection": "@pipeline().parameters.SourceConnectionID"
+              }
+            }
+          },
+          "sink": {
+            "type": "ParquetSink",
+            "storeSettings": {
+              "type": "LakehouseWriteSettings",
+              "copyBehavior": "MergeFiles"
+            },
+            "formatSettings": {
+              "type": "ParquetWriteSettings",
+              "enableVertiParquet": true
+            },
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "abdeafe5_4c85_4f24_b0c9_3684210449d2",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "workspaceId": "@pipeline().parameters.WorkspaceID",
+                    "artifactId": "@pipeline().parameters.DestinationConnectionID",
+                    "rootFolder": "Files"
+                  }
+                }
+              },
+              "type": "Parquet",
+              "typeProperties": {
+                "location": {
+                  "type": "LakehouseLocation",
+                  "fileName": {
+                    "value": "@pipeline().parameters.FileName",
+                    "type": "Expression"
+                  },
+                  "folderPath": {
+                    "value": "@concat(pipeline().parameters.LandingContainer,'/',pipeline().parameters.SourceSystemCode,'/',pipeline().parameters.DestinationTableName)",
+                    "type": "Expression"
+                  }
+                },
+                "compressionCodec": "snappy"
+              },
+              "schema": []
+            }
+          },
+          "enableStaging": false,
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "SourceConnectionID": {
+        "type": "string",
+        "defaultValue": "{{varSourceConnectionID}}"
+      },
+      "SourceTableName": {
+        "type": "string",
+        "defaultValue": "{{varSourceTableName}}"
+      },
+      "DestinationConnectionID": {
+        "type": "string",
+        "defaultValue": "{{varDestinationConnectionID}}"
+      },
+      "DestinationTableName": {
+        "type": "string",
+        "defaultValue": "{{varDestinationTableName}}"
+      },
+      "SourceSchemaName": {
+        "type": "string",
+        "defaultValue": "{{varSourceSchemaName}}"
+      },
+      "SourceDatabaseName": {
+        "type": "string",
+        "defaultValue": "{{varSourceDatabaseName}}"
+      },
+      "SourceSystemCode": {
+        "type": "string",
+        "defaultValue": "{{varSourceSystemCode}}"
+      },
+      "LandingContainer": {
+        "type": "string",
+        "defaultValue": "{{varLandingContainer}}"
+      },
+      "FileName": {
+        "type": "string",
+        "defaultValue": "{{varFileName}}"
+      },
+      "SourceQuery": {
+        "type": "string",
+        "defaultValue": "{{varSourceQuery}}"
+      },
+      "WorkspaceID": {
+        "type": "string",
+        "defaultValue": "{{varWorkspaceID}}"
+      }
+    }
+  }
+}

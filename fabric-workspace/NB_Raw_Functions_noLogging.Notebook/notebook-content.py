@@ -624,6 +624,85 @@ def process_Parquet(source_file_location: str) -> DataFrame:
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# CELL ********************
+
+def update_Source_IsEnabled(source_system_code: str, schema_Name: str, table_Name: str, is_Enabled: str):
+
+    # If the schema is empty but not none set it to none
+    if schema_Name == "":
+        schema_Name = None
+
+    # set the datetime variable to that of sydney
+    current_datetime_sydney = datetime.now(sydney_tz).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    #update the metadata tables
+    if schema_Name is None:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , IsEnabled = '{is_Enabled}' WHERE TargetTableName == '{table_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+    else:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , IsEnabled = '{is_Enabled}' WHERE TargetTableName == '{table_Name}' and SourceSchemaName = '{schema_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+def update_Source_CancelPipeline(source_system_code: str, schema_Name: str, table_Name: str, cancelPipeline: str):
+
+    # If the schema is empty but not none set it to none
+    if schema_Name == "":
+        schema_Name = None
+
+    # set the datetime variable to that of sydney
+    current_datetime_sydney = datetime.now(sydney_tz).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    #update the metadata tables
+    if schema_Name is None:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , cancelPipeline = '{cancelPipeline}' WHERE TargetTableName == '{table_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+    else:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , cancelPipeline = '{cancelPipeline}' WHERE TargetTableName == '{table_Name}' and SourceSchemaName = '{schema_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ##### update_Source_DeltaHighWaterMark
+
+# CELL ********************
+
+def update_Source_DeltaHighWaterMark(source_system_code: str, schema_Name: str, table_Name: str, max_version: str):
+
+    # If the schema is empty but not none set it to none
+    if schema_Name == "":
+        schema_Name = None
+
+    # set the datetime variable to that of sydney
+    current_datetime_sydney = datetime.now(sydney_tz).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    #update the metadata tables
+    if schema_Name is None:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , DeltaHighWaterMark = '{max_version}' WHERE TargetTableName == '{table_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+    else:
+        execute_SQL_with_retry(f"""Update LH_Bronze.meta_SourceObject SET LastRunTimeStamp = '{current_datetime_sydney}' , DeltaHighWaterMark = '{max_version}' WHERE TargetTableName == '{table_Name}' and SourceSchemaName = '{schema_Name}' and SourceSystemCode = '{source_system_code}'""", 1)
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # MARKDOWN ********************
 
 # #### set_Source_Last_Run
@@ -654,7 +733,6 @@ def set_Source_Last_Run(source_type: str, table_Name: str):
                 mode="append"
                 )
 
-    # execute_SQL_with_retry("Update meta_source_table SET LastRunTimeStamp = '"+current_datetime_sydney+ "' WHERE TargetTableName == '" + table_Name+ "'")
 
 # METADATA ********************
 

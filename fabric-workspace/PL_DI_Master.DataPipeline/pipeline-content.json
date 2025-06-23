@@ -1,0 +1,32 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {
+            "Fresh_Load": true,
+            "Control_DB_Name": "LH_Logging",
+            "Lakehouse_Name_Raw": "LH_Bronze"
+          },
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "f6d3508f-33b0-8310-4c86-d38426d2ed5d",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "76efb6af-5ac9-4965-85a3-61c6ee79653e"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Run Ingestion Pipeline",
+        "dependsOn": []
+      }
+    ]
+  }
+}
