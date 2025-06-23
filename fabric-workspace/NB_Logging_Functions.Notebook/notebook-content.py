@@ -562,7 +562,7 @@ sql_query = f"""
 CREATE TABLE IF NOT EXISTS LH_Logging.Notebook_Execution_Parameters
 (
     Log_ID BIGINT NOT NULL,
-    Notebook_Name STRING NOT NULL,
+    Notebook_Name STRING NOT NULL, 
     Notebook_Table STRING NOT NULL,
     ExecutionParameters STRING NOT NULL
 )
@@ -630,6 +630,16 @@ USING DELTA
 PARTITIONED BY (Notebook_Name, Target_Object_Name);
 """
 sql_output = execute_SQL_with_retry(sql_query)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 
 # METADATA ********************
 
