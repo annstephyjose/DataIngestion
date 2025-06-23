@@ -1,0 +1,6 @@
+SourceSystemCode,SourceType,RawLakehouseName,VaultPrivateKey,AuthUserName,SourceConnectionID,SourceDatabaseName,TargetConnectionID,IngestionPipelineName,RawToBronzePipelineName,LandingContainer,StagingContainer,ArchiveContainer,QuarantineContainer
+SF,SalesForce,LH_Bronze,SalesforcePrivateKey,integrationuser@ghd.com.qa, , ,,,,Landing,Staging,Archive,Quarantine
+BST,OnPremSQL,LH_Bronze,,,64539195-4fc2-4912-af73-a8951c93d757,BSTSTGSUB,2f1a6757-c886-499c-9729-c04aed84a78d,PL_OnPremiseSQL_Template,PL_RawToBronze_Template,Landing,Staging,Archive,Quarantine
+PSF,OnPremSQL,LH_Bronze,,,5f433996-c366-427c-b081-ffad55b67cf9,ProjectSetup_STG_MSF,2f1a6757-c886-499c-9729-c04aed84a78d,PL_OnPremiseSQL_Template,PL_RawToBronze_Template,Landing,Staging,Archive,Quarantine
+TM1,FabricDW,LH_Bronze,,,a9305a0e-b5af-473a-b9fc-34707b4dfebc, ,2f1a6757-c886-499c-9729-c04aed84a78d, ,PL_RawToBronze_Template,Landing,Staging,Archive,Quarantine
+GPScsv,OnPremCSV,LH_Bronze,,,fb60d40f-279d-48b0-92e0-b85e93ccccf1, ,2f1a6757-c886-499c-9729-c04aed84a78d,PL_OnPremiseCSV_Template,PL_RawToBronze_Template,Landing,Staging,Archive,Quarantine

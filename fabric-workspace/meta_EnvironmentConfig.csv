@@ -1,0 +1,4 @@
+﻿GlobalProperty,GlobalValue
+WaitInSeconds,30
+KeyvaultUri,https://ghd-kv-aue-d-dlake-001.vault.azure.net/
+ParralellBatchSize,20
