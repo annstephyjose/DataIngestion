@@ -1,4 +1,4 @@
-
+# Fabric notebook source
 
 from notebookutils import mssparkutils
 from pyspark.sql.types import *

@@ -1,4 +1,4 @@
-
+# Fabric notebook source
 
 ## Ensure parameters are integers
 varSecondsToWait = int(varSecondsToWait)

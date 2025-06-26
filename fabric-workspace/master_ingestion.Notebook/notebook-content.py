@@ -1,4 +1,4 @@
-
+# Fabric notebook source
 
 Conf_Vault_URI = "https://ghd-kv-aue-d-dlake-001.vault.azure.net/"
 varClientId = "3MVG9wlAIe_ccO6CynS1PM4sl7YYBj_nL_QW7TbaW8DSFSqBrReUrsNtwhxRbB9q4eJ4li_xxfCYVND8lnS.2"

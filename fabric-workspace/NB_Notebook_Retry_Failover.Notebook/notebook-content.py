@@ -1,4 +1,4 @@
-
+# Fabric notebook source
 
 Log_Lakehouse_Name = varLogLakehouse
 
