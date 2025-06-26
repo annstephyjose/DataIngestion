@@ -1,24 +1,4 @@
-# Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "environment": {
-# META       "environmentId": "465cf82a-0266-4faa-a113-386316bb9f98",
-# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
-# META     }
-# META   }
-# META }
-
-# MARKDOWN ********************
-
-# # Parameters
-
-# CELL ********************
 
 Log_Lakehouse_Name = varLogLakehouse
 

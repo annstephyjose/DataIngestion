@@ -1,44 +1,4 @@
-# Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "environment": {
-# META       "environmentId": "465cf82a-0266-4faa-a113-386316bb9f98",
-# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
-# META     }
-# META   }
-# META }
-
-# CELL ********************
-
-# MAGIC %%configure -f
-# MAGIC {
-# MAGIC     "defaultLakehouse": {  // This overwrites the default lakehouse for current session
-# MAGIC         "name":
-# MAGIC         {
-# MAGIC             "parameterName": "lh_name",
-# MAGIC             "defaultValue": "LH_Bronze"
-# MAGIC         }
-# MAGIC     }
-# MAGIC }
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# MARKDOWN ********************
-
-# # Parameters
-
-# CELL ********************
 
 Conf_Vault_URI = "https://ghd-kv-aue-d-dlake-001.vault.azure.net/"
 varClientId = "3MVG9wlAIe_ccO6CynS1PM4sl7YYBj_nL_QW7TbaW8DSFSqBrReUrsNtwhxRbB9q4eJ4li_xxfCYVND8lnS.2"

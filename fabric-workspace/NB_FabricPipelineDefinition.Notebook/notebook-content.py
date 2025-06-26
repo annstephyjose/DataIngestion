@@ -1,28 +1,4 @@
-# Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "environment": {
-# META       "environmentId": "b64c69e1-6069-b069-4b38-f5bf4b6db508",
-# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
-# META     }
-# META   }
-# META }
-
-# MARKDOWN ********************
-
-# # Parameters
-
-# MARKDOWN ********************
-
-# ## Imports
-
-# CELL ********************
 
 from notebookutils import mssparkutils
 import requests
